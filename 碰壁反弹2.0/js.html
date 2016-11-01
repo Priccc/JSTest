@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>2.0</title>
+	<style>
+	*{margin:0;padding:0;}
+	#main{width: 1900px;height: 950px;position: relative;}
+	#main div{width: 200px;height: 200px;background: #ccc;position: absolute;border-radius: 50%;margin: 10px;opacity: 0.6;}
+	</style>
+</head>
+<body>
+	<div id="main">
+		<p style="display: none;">11</p>
+	</div>
+
+	<script>
+		window.onload = function(){
+			var main = document.getElementById('main');
+			var num = 1+Math.floor(Math.random()*15);
+			var posX = [];
+			var posY = [];
+			var moveX = [];
+			var moveY = [];
+			var speed = [];
+			var timer;
+			
+			for(var i = 0;i < num;i++){
+				moveX[i] = true;
+				moveY[i] = true;
+				speed[i] = 1+Math.floor(Math.random()*5);
+			}
+			//随机颜色
+			var getRandomColor = function(){
+			 	return  '#' +
+			    (function(color){
+			    return (color +=  '0123456789abcdef'[Math.floor(Math.random()*16)])
+			      && (color.length == 6) ?  color : arguments.callee(color);
+			  })('');
+			}
+			//创建dom节点
+			function creat(){
+				for(var i = 0;i < num;i++){
+					var dom1 = document.createElement('div');
+					//获取随机位置
+					posX[i] = 1+Math.floor(Math.random()*1600);
+					posY[i] = 1+Math.floor(Math.random()*800);
+					dom1.style.left = posX + 'px';
+					dom1.style.top = posY + 'px';
+					dom1.style.background=getRandomColor();
+					main.appendChild(dom1);
+					dom1.id = 'box'+i;
+				}
+			}
+			//移动
+			function move(box,cnt,sp){
+				if(moveX[cnt]){
+					if(posX[cnt] > 0){
+						posX[cnt]-=sp;
+						box.style.left = posX[cnt] + 'px';
+					}else{
+						moveX[cnt] = false;
+					}
+				}else{
+					if(posX[cnt] < main.clientWidth - box.offsetWidth){
+						posX[cnt]+=sp;
+						box.style.left = posX[cnt] + 'px';
+					}else{
+						moveX[cnt] = true;
+					}
+				}
+				if(moveY[cnt]){
+					if(posY[cnt] > 0){
+						posY[cnt]-=sp;
+						box.style.top = posY[cnt] + 'px';
+					}else{
+						moveY[cnt] = false;
+					}
+				}else{
+					if(posY[cnt] < main.clientHeight - box.offsetHeight){
+						posY[cnt]+=sp;
+						box.style.top = posY[cnt] + 'px';
+					}else{
+						moveY[cnt] = true;
+					}
+				}
+			}
+			function start(){
+				creat();
+				timer = setInterval(function(){
+					for(var i = 0;i < num;i++){
+						var div = document.getElementById('box'+i);
+						move(div,i,speed[i]);
+					}
+				},15);
+			}
+			start();
+		}
+	</script>
+</body>
+</html>

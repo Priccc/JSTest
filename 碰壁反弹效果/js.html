@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>1.0</title>
+	<style>
+	*{margin:0;padding:0;}
+	#main{width: 1900px;height: 950px;position: relative;}
+	#box{width: 200px;height: 200px;background: #ccc;margin: 10px;position: absolute;}
+	</style>
+</head>
+<body>
+	<div id="main">
+		<div id="box"></div>
+	</div>
+
+	<script>
+		window.onload = function(){
+			var main = document.getElementById('main');
+			var box = document.getElementById('box');
+			var posX = 375;
+			var posY = 175;
+			var moveX = true;
+			var moveY = true;
+			var timer;
+
+			box.style.left = posX + 'px';
+			box.style.top = posY + 'px';
+
+			function move(){
+				if(moveX){
+					if(posX > 0){
+						posX--;
+						box.style.left = posX + 'px';
+					}else{
+						moveX = false;
+					}
+				}else{
+					if(posX < main.clientWidth - box.offsetWidth){
+						posX++;
+						box.style.left = posX + 'px';
+					}else{
+						moveX = true;
+					}
+				}
+				if(moveY){
+					if(posY > 0){
+						posY--;
+						box.style.top = posY + 'px';
+					}else{
+						moveY = false;
+					}
+				}else{
+					if(posY < main.clientHeight - box.offsetHeight){
+						posY++;
+						box.style.top = posY + 'px';
+					}else{
+						moveY = true;
+					}
+				}
+			}
+			timer = setInterval(move,10);
+		}
+	</script>
+</body>
+</html>

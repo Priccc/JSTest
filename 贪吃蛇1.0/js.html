@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>贪吃蛇1.0</title>
+	<style>
+	#wrap{width: 100%;min-width: 600px;}
+	#con{height: 400px;width: 400px;background: #ccc;margin: 100px auto;position: relative;}
+	#con div{width: 18px;height: 18px;border: 1px solid #3c3c3c;position: absolute;z-index: 1;}
+	#con #btn{position: absolute;bottom: -40px;left: 160px;width: 80px;height: 20px;line-height: 20px;font-size: 18px;text-align: center;color: #fff;background: #ffa000;border-radius: 5px;cursor: pointer;}
+	</style>
+</head>
+<body>
+	<div id="wrap">
+		<div id="con">
+			<span id="btn">开始</span>
+		</div>
+	</div>
+
+	<script>
+		window.onload = function(){
+			var con = document.getElementById('con');
+			var btn = document.getElementById('btn');
+			var left = 0;
+			var top = 0;
+			var count = 3;  //蛇块的数量
+			var direct = 'up'; //蛇默认方向
+			var dote = [];  //转折点
+			var dnum = 0;
+ 			var timer;
+			var snake = [];
+			var snum = count;
+			var ben = true;
+
+			//创建格子
+			for(var i = 0;i < 400;i++){
+				var box = document.createElement('div');
+				con.appendChild(box);
+				box.id = (i+1)+'div';
+				box.className = 0;
+				if(left < 400){
+					box.style.left = left + 'px';
+					box.style.top = top + 'px';
+					left+=20;
+				}else{
+					top+=20;
+					left=0;
+					box.style.left = left + 'px';
+					box.style.top = top + 'px';
+					left+=20;
+				}
+			}
+			var divs = con.getElementsByTagName('div');
+			//游戏结束
+			function gameover(){
+				alert('Game Over');
+				window.location.reload();
+			}
+			//游戏结束条件
+			function gover(topsn){
+				clearTimeout(timer);
+				if(topsn.className=='left' && topsn.offsetLeft == 0 && direct == 'left'){
+					gameover();
+				}else if(topsn.className=='up'){
+					if(divs[snake[0]-21] == undefined){
+						if(direct == 'up'){
+							gameover();
+						}
+					}else{
+						if(divs[snake[0]-21].className != '0'){
+							gameover();
+						}
+					}
+				}else if(topsn.className=='right' && topsn.offsetLeft == 380 && direct == 'right'){
+					if(divs[snake[0]].offsetTop != topsn.offsetTop){
+						gameover();
+					}
+				}else if(topsn.className=='down'){
+					if(divs[snake[0]+19] == undefined){
+						if(direct == 'down'){
+							gameover();
+						}
+					}else{
+						if(divs[snake[0]+19].className != '0'){
+							gameover();
+						}
+					}
+				}
+				goo();
+			}
+			//判断键盘方向案件
+			document.onkeydown = function(event){
+				var e = window.event || event;
+				var keyCode = null;
+		        if(e.which){
+		            keyCode = e.which;
+		        }
+		        else if(e.keyCode) {
+		            keyCode = e.keyCode;
+		        }
+		        if(ben){
+		        	if(keyCode == 37){
+			        	if(direct != 'right' && direct != 'left'){
+			        		direct = 'left';
+			        		ben=false;
+			        		setTimeout(function(){
+					        	ben=true;
+					        },150);
+		        		}
+			        }else if(keyCode == 38){
+			        	if(direct != 'down' && direct != 'up'){
+			        		direct = 'up';
+			        		ben=false;
+			        		setTimeout(function(){
+					        	ben=true;
+					        },150);
+			        	}
+			        }else if(keyCode == 39){
+			        	if(direct != 'left' && direct != 'right'){
+			        		direct = 'right';
+			        		ben=false;
+			        		setTimeout(function(){
+					        	ben=true;
+					        },150);
+			        	}
+			        }else if(keyCode == 40){
+			        	if(direct != 'up' && direct != 'down'){
+			        		direct = 'down';
+			        		ben=false;
+			        		setTimeout(function(){
+					        	ben=true;
+					        },150);
+			        	}
+			        }
+		        }
+			}
+			//头部移动自动
+			function topSnake(){
+				var sntop = divs[snake[0]-1];
+				if(direct!=sntop.className){
+					dote[dnum++] = snake[0];
+					sntop.className = direct;
+					animated = true;
+				}
+				if(sntop.className=='left'){
+					sntop.style.background = '';
+					snake[0] = snake[0] - 1;
+					if(divs[snake[0]-1].style.background == 'red'){
+						grow(divs[snake[0]-1]);
+					}
+					divs[snake[0]-1].className = direct;
+					divs[snake[0]-1].style.background = 'green';
+				}else if(sntop.className=='up'){
+					sntop.style.background = '';
+					snake[0] = snake[0] - 20;
+					if(divs[snake[0]-1].style.background == 'red'){
+						grow(divs[snake[0]-1]);
+					}
+					divs[snake[0]-1].className = direct;
+					divs[snake[0]-1].style.background = 'green';
+				}else if(sntop.className=='right'){
+					sntop.style.background = '';
+					snake[0] = snake[0] + 1;
+					if(divs[snake[0]-1].style.background == 'red'){
+						grow(divs[snake[0]-1]);
+					}
+					divs[snake[0]-1].className = direct;
+					divs[snake[0]-1].style.background = 'green';
+				}else if(sntop.className=='down'){
+					sntop.style.background = '';
+					snake[0] = snake[0] + 20;
+					if(divs[snake[0]-1].style.background == 'red'){
+						grow(divs[snake[0]-1]);
+					}
+					divs[snake[0]-1].className = direct;
+					divs[snake[0]-1].style.background = 'green';
+				}
+			}
+			//中部移动自动
+			function middleSnake(){
+				for(var i = 1;i < snum-1;i++){
+					if(divs[snake[i]-1].className=='left'){
+						divs[snake[i]-1].style.background = '';
+						snake[i]-=1;
+						divs[snake[i]-1].style.background = 'green';
+					}else if(divs[snake[i]-1].className=='up'){
+						divs[snake[i]-1].style.background = '';
+						snake[i]-=20;
+						divs[snake[i]-1].style.background = 'green';
+					}else if(divs[snake[i]-1].className=='right'){
+						divs[snake[i]-1].style.background = '';
+						snake[i]+=1;
+						divs[snake[i]-1].style.background = 'green';
+					}else if(divs[snake[i]-1].className=='down'){
+						divs[snake[i]-1].style.background = '';
+						snake[i]+=20;
+						divs[snake[i]-1].style.background = 'green';
+					}
+				}
+			}
+			//尾部移动自动
+			function bottomSnake(){
+				var last = snake.length-1;
+				if(divs[snake[last]-1].className=='left'){
+					divs[snake[last]-1].style.background = '';
+					divs[snake[last]-1].className = 0;
+					snake[last]-=1;
+					if(snake[last] == dote[dnum-1]){
+						dote[dnum-1] = '';
+						dnum--;
+					}
+					divs[snake[last]-1].style.background = 'green';
+				}else if(divs[snake[last]-1].className=='up'){
+					divs[snake[last]-1].style.background = '';
+					divs[snake[last]-1].className = 0;
+					snake[last]-=20;
+					if(snake[last] == dote[dnum-1]){
+						dote[dnum-1] = '';
+						dnum--;
+					}
+					divs[snake[last]-1].style.background = 'green';
+				}else if(divs[snake[last]-1].className=='right'){
+					divs[snake[last]-1].style.background = '';
+					divs[snake[last]-1].className = 0;
+					snake[last]+=1;
+					if(snake[last] == dote[dnum-1]){
+						dote[dnum-1] = '';
+						dnum--;
+					}
+					divs[snake[last]-1].style.background = 'green';
+				}else if(divs[snake[last]-1].className=='down'){
+					divs[snake[last]-1].style.background = '';
+					divs[snake[last]-1].className = 0;
+					snake[last]+=20;
+					if(snake[last] == dote[dnum-1]){
+						dote[dnum-1] = '';
+						dnum--;
+					}
+					divs[snake[last]-1].style.background = 'green';
+				}
+			}
+			//吃掉果实，蛇变长
+			function grow(grows){
+				grows.style.background = '';
+				count++;
+				var bb = divs[snake[snum-1]-1];
+				if(bb.className=='left'){
+					snum++;
+					snake[snum-1] = snake[snum-2]+1;
+					divs[snake[snum-1]-1].style.background = 'green';
+					divs[snake[snum-1]-1].className = 'left';
+				}else if(bb.className=='up'){
+					snum++;
+					snake[snum-1] = snake[snum-2]+20;
+					divs[snake[snum-1]-1].style.background = 'green';
+					divs[snake[snum-1]-1].className = 'up';
+				}else if(bb.className=='right'){
+					snum++;
+					snake[snum-1] = snake[snum-2]-1;
+					divs[snake[snum-1]-1].style.background = 'green';
+					divs[snake[snum-1]-1].className = 'right';
+				}else if(bb.className=='down'){
+					snum++;
+					snake[snum-1] = snake[snum-2]-20;
+					divs[snake[snum-1]-1].style.background = 'green';
+					divs[snake[snum-1]-1].className = 'down';
+				}
+				food();
+			}
+			//随机生成果实
+			function food(){
+				var pos = Math.floor(Math.random()*400);
+				if(divs[pos].className != '0'){
+					food();
+				}else{
+					divs[pos].style.background='red';
+				}
+			}
+			//初始化
+			function initialize(){
+				for(var i = 0;i < 400;i++){
+					divs[i].className = 0;
+					divs[i].style.background="#ccc";
+				}
+				var index = 0;
+				for(var i = 169;i <= 209;i+=20){
+					divs[i].style.background = 'green';
+					divs[i].className = 'up';
+					snake[index++] = i+1;
+				}
+				direct = 'up';
+				food();
+			}
+			//定时器
+			function goo(){
+				timer = setTimeout(function(){
+					gover(divs[snake[0]-1]);
+					topSnake();
+					middleSnake();
+					bottomSnake();
+					goo();
+				},500);
+			}
+			btn.onclick = function start(){
+				initialize();
+				goo();
+			}
+		}
+	</script>
+</body>
+</html>

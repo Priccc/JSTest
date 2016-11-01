@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>三级联动</title>
+	<style>
+	#wrap{width: 100%;min-width: 800px;}
+	#wrap #con{width: 800px;margin: 300px auto;overflow: hidden;}
+	#wrap #con select{width: 200px;height: 30px;margin-right: 20px;}
+	</style>
+	<script type="text/javascript" src="citylist.js"></script>
+</head>
+<body>
+	<div id="wrap">
+		<div id="con">
+			<span>省/市</span>
+			<select name="" id="sheng">
+				<option value="-1">请选择	</option>
+			</select>
+			<span>市/县</span>
+			<select name="" id="shi">
+				<option value="-1">请选择	</option>
+			</select>
+			<span>区</span>
+			<select name="" id="qu">
+				<option value="-1">请选择	</option>
+			</select>
+		</div>
+	</div>
+
+	<script>
+		window.onload = function(){
+			var sheng = document.getElementById('sheng');
+			var shi = document.getElementById('shi');
+			var qu = document.getElementById('qu');
+
+			for(var i = 0;i < json.citylist.length;i++){
+				sheng.innerHTML += '<option value="'+i+'">'+json.citylist[i].p+'</option>';
+			}
+
+			sheng.onchange = function(){
+				var priv = '<option value="-1">请选择</option>';
+				if(sheng.value == -1){
+					shi.innerHTML = priv;
+					qu.innerHTML = priv;
+					return;
+				}
+				for(var i = 0;i < json.citylist[sheng.value].c.length;i++){
+					priv += '<option value="'+i+'">'+json.citylist[sheng.value].c[i].n+'</option>';
+				}
+				shi.innerHTML = priv;
+				priv = '<option value="-1">请选择</option>';
+				qu.innerHTML = priv;
+				
+				shi.onchange = function(){
+					if(shi.value == -1){
+						qu.innerHTML = priv;
+						return;
+					}
+					if(json.citylist[sheng.value].c[shi.value].a == undefined){
+						qu.innerHTML = priv;
+						return;
+					}
+					for(var i = 0;i < json.citylist[sheng.value].c[shi.value].a.length;i++){
+						priv += '<option value="'+i+'">'+json.citylist[sheng.value].c[shi.value].a[i].s+'</option>';
+					}
+					qu.innerHTML = priv;
+				}
+			}
+		}
+	</script>
+</body>
+</html>

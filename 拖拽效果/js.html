@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+
+	<style>
+	#wrap{width: 400px;height: 400px;border: 8px solid #b1b8e0;background: #e9eff8;position: relative;}
+	#drag{width: 50px;height: 50px;border: 8px solid #eb651d;background: #9de4ec;position: absolute;left: 0;top: 0;}
+	</style>
+</head>
+<body>
+	<div id="wrap">
+		<div id="drag"></div>
+	</div>
+
+	<script>
+		window.onload = function(){
+			var wrap = document.getElementById('wrap');
+			var drag = document.getElementById('drag');
+
+			drag.onmousedown = function(event){
+				var event = event || window.event;
+				var tmpX = event.clientX - drag.offsetLeft;
+				var tmpY = event.clientY - drag.offsetTop;
+				if(event.preventDefault){
+					event.preventDefault();
+				}else{
+					event.returnValue = false;
+				}
+
+				document.onmousemove = function(event){
+					var event = event || window.event;
+					var endX = event.clientX - tmpX;
+					var endY = event.clientY - tmpY;
+					var mouseX = wrap.clientWidth - drag.offsetWidth;
+					var mouseY = wrap.clientHeight - drag.offsetHeight;
+					if(endX >= mouseX){
+						endX = mouseX;
+					}
+					if(endX <= 0){
+						endX = 0;
+					}
+					if(endY >= mouseY){
+						endY = mouseY;
+					}
+					if(endY <= 0){
+						endY = 0;
+					}
+					drag.style.left = endX + 'px';
+					drag.style.top = endY + 'px';
+				}
+			}
+			document.onmouseup = function(){
+				document.onmousemove = null;
+			}
+		}
+	</script>
+</body>
+</html>

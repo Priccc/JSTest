@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+	ul,li,div{padding:0;margin: 0;}
+	ul li{float: left;width: 100px;height: 30px;line-height: 30px;text-align: center;background: #fff;border: 1px solid #bbb;border-bottom: none;}
+	ul li.select{background: #ccc;color: red;}
+	ul{overflow: hidden;zoom: 1;list-style-type: none;}
+	#tab_con{width: 406px;height: 200px;}
+	#tab_con div{width: 406px;height: 200px;display: none;border: 1px solid #bbb;border-top: none;}
+	#tab_con .show{display: block;background: #ccc;}
+	</style>
+</head>
+<body>
+	<ul class="tab_nav"> 
+		<li class="select">tab1</li>
+		<li>tab2</li>
+		<li>tab3</li>
+		<li>tab4</li>
+	</ul>
+	<div id="tab_con">
+		<div class="show">aaaa</div>
+		<div>bbbb</div>
+		<div>cccc</div>
+		<div>dddd</div>
+	</div>
+
+	<script>
+		var nav = document.getElementById('tab_nav');
+		var lis = document.getElementsByTagName('li');
+		var divs = document.getElementById('tab_con').getElementsByTagName('div');
+		for(var i = 0;i < lis.length;i++){
+			lis[i].onclick = function(){
+				for(var i = 0;i < lis.length;i++){
+					if(this == lis[i]){
+						lis[i].className = "select";
+						divs[i].className = "show";
+					}else{
+						lis[i].className = "";
+						divs[i].className = "";
+					}
+				}
+			}
+		}
+	</script>
+</body>
+</html>

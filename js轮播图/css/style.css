@@ -1,0 +1,13 @@
+*{margin:0;padding:0;text-decoration: none;}
+.wrap{width: 100%;min-width: 600px;}
+.wrap #con{width: 600px;height: 400px;margin: 0 auto;overflow: hidden;position: relative;}
+.wrap #con #slider{width: 3600px;height: 400px;position: absolute;z-index: 1;}
+.wrap #con #slider img{float: left;border: none;}
+.wrap #con #nav{position: absolute;left: 270px;bottom: 10px;width: 89px;height: 20px;z-index: 2;}
+.wrap #con #nav span{float: left;border: 1px solid #3c3c3c;border-radius: 50%;width: 10px;height: 10px;margin-right: 10px;background: #333;}
+.wrap #con #nav .on{background: orangered;}
+.wrap #con .arrow{width: 40px;height: 40px;position: absolute;top: 180px;line-height: 40px;font-size: 36px;font-weight: bold;color: #fff;text-align: center;z-index: 2;background: rgba(0,0,0,0.3);cursor: pointer;display: none;}
+.wrap #con #prev{left: 20px;}
+.wrap #con #next{right: 20px;}
+.wrap #con:hover .arrow{display: block;}
+.wrap #con .arrow:hover{background: rgba(0,0,0,0.7);}
